@@ -1,0 +1,70 @@
+version: '3.8' # can omit this
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    env_file: ./api-gateway/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  identity-service:
+    build: ./identity-service
+    env_file: ./identity-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  post-service:
+    build: ./post-service
+    env_file: ./post-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  media-service:
+    build: ./media-service
+    env_file: ./media-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  search-service:
+    build: ./search-service
+    env_file: ./search-service/.env
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  redis:  # we are also going to use redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management # this will automatically use official rabbitmq image with management plugin enabled
+    ports:
+      - "5672:5672"
+      - "15672:15672" # exposes the management plugin HTTP API to the host
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"] # this command checks if rabbitmq is responsive/health or not
+      interval: 30s
+      timeout: 10s # 10s timeout for the healthcheck command to execute
+      retries: 5
