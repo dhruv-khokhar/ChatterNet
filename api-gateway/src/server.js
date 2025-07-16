@@ -9,7 +9,6 @@ const logger = require('./utils/logger');
 const proxy = require('express-http-proxy');    // pkg to redirect api gateway to identity when registering (say)
 const errorHandler = require('./middleware/errorHandler');
 const validateToken = require('./middleware/authMiddleware');
-const { validate } = require('../../media-service/src/models/Media');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
