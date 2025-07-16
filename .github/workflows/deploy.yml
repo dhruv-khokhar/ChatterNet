@@ -3,7 +3,7 @@ name: Deploy to VPS # name of the workflow - appears in GitHub Actions UI
 on: # trigger the deployment process whenever there is a push to master branch
   push:
     branches:
-      - master
+      - main
 
 jobs: # we have 2 jobs : build and deploy
   build:  # build steps
